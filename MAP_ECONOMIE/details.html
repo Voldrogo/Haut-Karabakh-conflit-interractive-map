@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails Historiques | Atlas Haut-Karabagh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        :root { --dark-bg: #0b0e14; --panel-bg: #161b22; --accent: #00a8ff; }
+        body { background-color: var(--dark-bg); color: #e1e1e1; font-family: 'Segoe UI', sans-serif; line-height: 1.7; padding: 40px 20px; }
+        .container { max-width: 850px; }
+        .card-detail { background: var(--panel-bg); border: 1px solid #30363d; border-radius: 12px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .btn-back { color: var(--accent); text-decoration: none; font-weight: bold; margin-bottom: 20px; display: inline-block; transition: 0.3s; }
+        .btn-back:hover { color: #fff; transform: translateX(-5px); }
+        .year-badge { background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; }
+        .impact-box { background: rgba(0, 168, 255, 0.05); border-left: 4px solid var(--accent); padding: 20px; margin-top: 30px; border-radius: 0 8px 8px 0; }
+        h1 { font-weight: 800; margin-top: 15px; color: #fff; }
+        .type-tag { text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; color: #888; }
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 40px; }
+        .btn-nav { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; padding: 10px 20px; border-radius: 6px; text-decoration: none; transition: 0.2s; }
+        .btn-nav:hover { background: #30363d; color: var(--accent); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="index.html" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la carte interactive</a>
+    
+    <div id="content" class="card-detail">
+        <div class="text-center">Chargement des archives...</div>
+    </div>
+
+    <div class="nav-buttons">
+        <a id="prev-btn" href="#" class="btn-nav"><i class="fas fa-chevron-left"></i> Précédent</a>
+        <a id="next-btn" href="#" class="btn-nav">Suivant <i class="fas fa-chevron-right"></i></a>
+    </div>
+</div>
+
+<script>
+    const eventData = [
+        { "year": 1920, "type": "POGROM", "title": "Massacre de Chouchi", "desc": "En mars 1920, les tensions entre Arméniens et Azéris culminent par la destruction du quartier arménien de Chouchi. Des milliers d'Arméniens sont tués et des milliers d'autres forcés à fuir, changeant radicalement la démographie de la ville qui était alors le centre culturel de la région. Cette tragédie précède de peu l'arrivée de l'Armée rouge.", "impact": "Marque le premier grand nettoyage ethnique moderne de la ville et sème une haine durable avant la période soviétique." },
+        { "year": 1921, "type": "POLITIQUE", "title": "Décision du Kavburo", "desc": "Le 5 juillet 1921, le bureau caucasien du Parti Communiste (Kavburo), sous l'influence directe de Joseph Staline, décide de rattacher le Haut-Karabagh à la RSS d'Azerbaïdjan. Cette décision est prise malgré une population à plus de 90% arménienne, officiellement pour apaiser les relations avec la Turquie d'Atatürk.", "impact": "C'est l'acte fondateur du conflit. Cette frontière administrative arbitraire deviendra une frontière internationale explosive à la chute de l'URSS." },
+        { "year": 1923, "type": "POLITIQUE", "title": "Création de l'Oblast Autonome (OAHK)", "desc": "L'Azerbaïdjan crée officiellement la Région Autonome du Haut-Karabagh. Le tracé est conçu de manière chirurgicale pour qu'aucune partie du territoire ne touche la République d'Arménie. Le 'couloir de Latchine' est placé sous administration azérie directe pour isoler l'enclave.", "impact": "Institutionnalisation de l'enclavement géographique et début d'un siècle de tensions administratives." },
+        { "year": 1963, "type": "POLITIQUE", "title": "La Pétition des 2500", "desc": "Dans un climat de relatif dégel après Staline, 2500 cadres et intellectuels arméniens du Karabagh signent une pétition adressée à Nikita Khrouchtchev. Ils dénoncent les politiques de 'sous-développement' économique et de 'dé-arménisation' culturelle menées par Bakou.", "impact": "Prouve que la résistance arménienne n'a jamais cessé durant la période soviétique stable." },
+        { "year": 1988, "type": "POLITIQUE", "title": "Vote du 20 Février", "desc": "Le Soviet régional du Haut-Karabagh vote une demande officielle de transfert de l'Azerbaïdjan vers l'Arménie. Ce vote pacifique et légal selon les interprétations locales déclenche une onde de choc à Moscou et des manifestations de millions de personnes à Erevan.", "impact": "Le conflit sort de l'ombre et devient le premier grand défi séparatiste pour Mikhaïl Gorbatchev." },
+        { "year": 1988, "type": "POGROM", "title": "Massacres de Soumgaït", "desc": "En réponse aux manifestations arméniennes, un pogrom éclate à Soumgaït, ville industrielle azérie. Pendant trois jours, des foules pourchassent les Arméniens dans leurs maisons. Le bilan officiel est de 32 morts, mais les témoins parlent de centaines de victimes torturées et tuées.", "impact": "Met fin à tout espoir de résolution pacifique simple et déclenche l'exode des Arméniens d'Azerbaïdjan." },
+        { "year": 1988, "type": "POGROM", "title": "Pogrom de Kirovabad", "desc": "En novembre 1988, la violence se déplace à Kirovabad (Gandja). Les Arméniens s'organisent en groupes d'autodéfense tandis que l'armée soviétique décrète le couvre-feu. Les échanges de population deviennent massifs et violents des deux côtés de la frontière.", "impact": "Accélère la ségrégation ethnique totale entre les deux républiques soviétiques." },
+        { "year": 1990, "type": "POGROM", "title": "Janvier Noir à Bakou", "desc": "Un nouveau pogrom frappe les Arméniens restants à Bakou. L'armée rouge finit par intervenir brutalement le 20 janvier, non pas pour sauver les Arméniens mais pour réprimer l'indépendantisme azéri, faisant de nombreuses victimes locales.", "impact": "L'Azerbaïdjan bascule vers l'indépendance totale tandis que les derniers Arméniens quittent définitivement Bakou." },
+        { "year": 1991, "type": "GUERRE", "title": "Opération Anneau (Koltso)", "desc": "Le ministère de l'Intérieur azéri et l'armée soviétique lancent une opération militaire pour déporter les villageois arméniens des zones frontalières du nord du Karabagh. C'est le premier usage massif d'armes lourdes contre des populations civiles.", "impact": "Transforme la crise politique en une guerre d'indépendance armée." },
+        { "year": 1991, "type": "POLITIQUE", "title": "Proclamation d'Indépendance", "desc": "Le 2 septembre 1991, s'appuyant sur une loi soviétique permettant aux régions autonomes de choisir leur destin si la république parente fait sécession, le Haut-Karabagh proclame son indépendance. Un référendum suit en décembre avec un 'Oui' massif.", "impact": "Naissance de la République d'Artsakh, État de facto doté de toutes les institutions mais non reconnu." },
+        { "year": 1992, "type": "BATAILLE", "title": "Massacre de Khodjaly", "desc": "Au cours d'une opération arménienne pour prendre l'aéroport de Khodjaly, des centaines de civils azéris fuyant par un corridor sont tués. Les deux camps se rejettent la responsabilité des circonstances exactes du massacre.", "impact": "C'est la plus grande tragédie humaine du conflit côté azerbaïdjanais, utilisée comme pilier de la mémoire nationale à Bakou." },
+        { "year": 1992, "type": "BATAILLE", "title": "Massacre de Maragha", "desc": "Peu après Khodjaly, les forces azéries capturent le village arménien de Maragha. Des dizaines de civils sont exécutés avec une cruauté extrême. L'organisation Christian Solidarity International décrira une scène de carnage.", "impact": "Démontre la spirale de vengeance aveugle qui caractérise la première guerre." },
+        { "year": 1992, "type": "BATAILLE", "title": "Siège de Stepanakert", "desc": "Pendant des mois, la capitale Stepanakert est pilonnée depuis les hauteurs de Chouchi par des lance-roquettes Grad. La ville est plongée dans le noir, sans eau, et les habitants vivent dans des caves insalubres sous un déluge de fer.", "impact": "Crée une situation d'urgence vitale qui force les Arméniens à une contre-offensive majeure." },
+        { "year": 1992, "type": "BATAILLE", "title": "Libération de Chouchi", "desc": "Le 9 mai 1992, les forces arméniennes escaladent les falaises et s'emparent de Chouchi en une nuit. C'est un exploit militaire qui met fin au pilonnage de la capitale et redonne aux Arméniens leur centre historique.", "impact": "Tournant psychologique et stratégique majeur de la première guerre du Karabagh." },
+        { "year": 1992, "type": "LOGISTIQUE", "title": "Prise de Latchine", "desc": "Quelques jours après Chouchi, les Arméniens prennent Latchine. Pour la première fois depuis 1921, le Haut-Karabagh n'est plus une enclave : une route physique le relie enfin à l'Arménie.", "impact": "Brise le blocus et permet l'arrivée massive d'aide humanitaire et de munitions." },
+        { "year": 1993, "type": "POLITIQUE", "title": "Résolution 822 de l'ONU", "desc": "Suite à la prise de Kelbadjar par les Arméniens, l'ONU adopte la première de ses quatre résolutions. Elle demande le retrait des 'forces occupantes' et réaffirme l'intégrité territoriale de l'Azerbaïdjan.", "impact": "Fixe le cadre légal international qui sera utilisé par Bakou pendant 30 ans pour justifier la reconquête." },
+        { "year": 1994, "type": "POLITIQUE", "title": "Cessez-le-feu de Bichkek", "desc": "Après une série de victoires arméniennes, un accord de cessez-le-feu est signé au Kirghizistan. Les Arméniens contrôlent le Karabagh et sept districts azéris autour, créant une zone tampon.", "impact": "Gèle le conflit dans une configuration qui ne bougera presque plus jusqu'en 2020." },
+        { "year": 1998, "type": "POLITIQUE", "title": "Chute de Levon Ter-Petrossian", "desc": "Le premier président arménien propose un plan de paix par étapes incluant le rendu de certains territoires. Il est contraint à la démission par les 'faucons' (Robert Kotcharian et Serge Sarkissian) issus du Karabagh.", "impact": "L'Arménie s'installe dans une position de refus de compromis territorial majeur." },
+        { "year": 2001, "type": "POLITIQUE", "title": "Sommet de Key West", "desc": "George W. Bush réunit les présidents Aliev et Kotcharian en Floride. Un plan prévoyant le rattachement du Karabagh à l'Arménie contre un couloir vers le Nakhitchevan est sur la table. L'accord échoue au dernier moment.", "impact": "Représente la dernière fois où une solution politique négociée a failli aboutir." },
+        { "year": 2005, "type": "CULTURE", "title": "Destruction de Djoulfa", "desc": "Au Nakhitchevan, des images satellite et des vidéos confirment la destruction systématique par l'armée azérie de milliers de khatchkars (pierres tombales sculptées) médiévaux arméniens.", "impact": "Illustre la 'guerre contre la pierre' et la peur d'un effacement culturel total en cas de retour du Karabagh sous Bakou." },
+        { "year": 2012, "type": "POLITIQUE", "title": "Affaire Ramil Safarov", "desc": "Le soldat azéri Safarov, qui avait décapité un soldat arménien à la hache lors d'une formation de l'OTAN, est extradé par la Hongrie. À son retour à Bakou, il est accueilli en héros et gracié.", "impact": "Détruit toute confiance résiduelle dans la diplomatie et radicalise les opinions publiques." },
+        { "year": 2016, "type": "GUERRE", "title": "Guerre des Quatre Jours", "desc": "L'Azerbaïdjan lance une offensive 'test' en avril 2016. Les combats font des centaines de morts. C'est l'apparition massive des drones israéliens (Harop) sur le champ de bataille.", "impact": "Avertissement majeur que l'Azerbaïdjan a désormais la supériorité technologique." },
+        { "year": 2020, "type": "GUERRE", "title": "Offensive des 44 Jours", "desc": "Le 27 septembre 2020, l'Azerbaïdjan lance une guerre totale avec le soutien massif de la Turquie. Les drones Bayraktar TB2 déciment les blindés arméniens. La guerre change de dimension technologique.", "impact": "Effondrement du système défensif arménien construit depuis 1994." },
+        { "year": 2020, "type": "CULTURE", "title": "Bombardement de Ghazanchetsots", "desc": "Pendant la guerre, la grande cathédrale de Chouchi est frappée deux fois par des missiles de haute précision azerbaïdjanais, alors que des civils et des journalistes s'y trouvaient.", "impact": "Devient le symbole de la vulnérabilité du patrimoine chrétien face aux armes modernes." },
+        { "year": 2020, "type": "BATAILLE", "title": "Chute de Chouchi (2020)", "desc": "Après des combats acharnés dans les forêts, les forces spéciales azéries capturent Chouchi le 7 novembre. La chute de cette ville verrouille l'accès à la capitale et rend la suite des combats impossible pour l'Arménie.", "impact": "Provoque la capitulation arménienne immédiate pour éviter la destruction de Stepanakert." },
+        { "year": 2020, "type": "POLITIQUE", "title": "Accord du 9 Novembre", "desc": "Un cessez-le-feu tripartite est signé sous l'égide de Poutine. L'Arménie rend les 7 districts et perd une partie du Karabagh. Des casques bleus russes sont déployés pour 5 ans.", "impact": "L'Artsakh est réduit à une peau de chagrin, totalement dépendant de la Russie pour sa survie." },
+        { "year": 2022, "type": "LOGISTIQUE", "title": "Blocus du Corridor", "desc": "Le 12 décembre, sous couvert de manifestations écologiques, l'Azerbaïdjan bloque le corridor de Latchine. En 2023, un check-point militaire est installé. La population subit 9 mois de famine et de manque de médicaments.", "impact": "Prépare le terrain pour le départ forcé de la population par l'asphyxie." },
+        { "year": 2023, "type": "GUERRE", "title": "Offensive Finale", "desc": "Le 19 septembre 2023, l'Azerbaïdjan lance une 'opération anti-terroriste' éclair de 24h. Sans soutien de l'Arménie ni des Russes, l'armée de l'Artsakh capitule et accepte son démantèlement.", "impact": "Fin militaire définitive de l'entité politique du Haut-Karabagh." },
+        { "year": 2023, "type": "EXODE", "title": "Le Grand Exode", "desc": "Craignant un massacre après la capitulation, la totalité de la population (120 000 personnes) prend la route de l'Arménie. Le corridor de Latchine voit défiler des milliers de voitures pendant une semaine de cauchemar.", "impact": "Nettoyage ethnique achevé. Pour la première fois en 2000 ans, il n'y a plus d'Arméniens au Karabagh." },
+        { "year": 2023, "type": "POLITIQUE", "title": "Arrestation du Gouvernement", "desc": "Lors de l'exode, l'Azerbaïdjan arrête les anciens présidents (Arayik Haroutiounian, Bako Sahakian, Arkadi Ghoukassian) et des officiels comme Ruben Vardanyan. Ils sont emprisonnés à Bakou.", "impact": "Liquidation symbolique et politique de la République d'Artsakh." }
+    ];
+
+    const params = new URLSearchParams(window.location.search);
+    let id = parseInt(params.get('id'));
+
+    function renderEvent(index) {
+        if (index >= 0 && index < eventData.length) {
+            const ev = eventData[index];
+            document.getElementById('content').innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="type-tag">${ev.type}</span>
+                    <span class="year-badge">${ev.year}</span>
+                </div>
+                <h1>${ev.title}</h1>
+                <hr style="border-color: #30363d">
+                <p class="mt-4" style="font-size: 1.15rem;">${ev.desc}</p>
+                
+                <div class="impact-box">
+                    <h5 class="text-info"><i class="fas fa-exclamation-triangle"></i> Analyse de l'impact</h5>
+                    <p class="mb-0">${ev.impact}</p>
+                </div>
+                
+                <div class="mt-5 pt-4 border-top border-secondary">
+                    <p class="small text-muted text-center">Archive historique - Projet Atlas Géopolitique</p>
+                </div>
+            `;
+            document.title = ev.title + " - Histoire du Haut-Karabagh";
+
+            // Mise à jour des boutons
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            if (index > 0) {
+                prevBtn.style.visibility = "visible";
+                prevBtn.href = `details.html?id=${index - 1}`;
+            } else {
+                prevBtn.style.visibility = "hidden";
+            }
+
+            if (index < eventData.length - 1) {
+                nextBtn.style.visibility = "visible";
+                nextBtn.href = `details.html?id=${index + 1}`;
+            } else {
+                nextBtn.style.visibility = "hidden";
+            }
+        } else {
+            document.getElementById('content').innerHTML = "<h1>Événement non trouvé</h1><p>Veuillez revenir à la carte.</p>";
+            document.querySelector('.nav-buttons').style.display = "none";
+        }
+    }
+
+    renderEvent(id);
+</script>
+
+</body>
+</html>
